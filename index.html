@@ -89,11 +89,12 @@ summary{cursor:pointer;color:var(--a);font-size:13px;min-height:32px;display:fle
 .fr{display:flex;gap:6px;margin-bottom:6px}
 .fr .fo{flex:1;min-width:0;margin-bottom:0}
 .fe{width:44px;padding:0;color:var(--m);font-size:16px}
-.mg{display:grid;grid-template-columns:112px 1fr 56px;align-items:center;gap:10px;padding:5px 0}
+.mg{display:grid;grid-template-columns:112px 1fr 92px;align-items:center;gap:10px;padding:5px 0}
 .ml{font-size:13px;display:flex;align-items:center}
 .mt{height:10px;background:var(--l);border-radius:5px;overflow:hidden}
 .mt i{display:block;height:100%;border-radius:5px}
-.mg b{text-align:right;font-weight:600;font-size:14px}
+.mg b{text-align:right;font-weight:600;font-size:14px;white-space:nowrap}
+.mg small{font:400 12px Inter,system-ui,sans-serif;color:var(--m)}
 .pc{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;color:var(--m)}
 .pc .dot{width:8px;height:8px;margin-right:6px}
 .mh{width:100%;display:flex;justify-content:space-between;align-items:center;gap:8px;background:none;border:0;border-radius:8px;padding:0;min-height:44px;font:inherit;font-weight:400;color:inherit;text-align:left}
@@ -118,12 +119,7 @@ h2.mhd{margin:0}
   <div class="bar"><div class="band"></div><div class="mk" id="mk"></div></div>
   <div class="sc"><span id="s1"></span><span id="s2"></span><span id="s3"></span></div>
   <p id="st"></p>
-  <div id="mbar" style="margin-top:14px"></div>
-  <div class="pc" id="dom"></div>
-</section>
-<section class="card">
-  <div class="hd"><h2>Macros del día</h2></div>
-  <div id="mrows"></div>
+  <div id="mrows" style="margin-top:12px;padding-top:10px;border-top:1px solid var(--l)"></div>
   <p class="mu" id="pk" style="margin:6px 0 0"></p>
 </section>
 <div id="m"></div>
@@ -301,11 +297,9 @@ else if(T>hi){st.textContent='Te pasas '+fm(T-hi)+' kcal del máximo';st.style.c
 else{st.textContent='Te faltan '+fm(lo-T)+' kcal para el mínimo';st.style.color='#f0a35e'}
 const R=[['Proteína',TP,TP*4,'#5ACAE4'],['Carbohidratos',TC,TC*4,'#f2f2f2'],['Grasas',TF,TF*9,'#7a7a7a']];
 const kt=R[0][2]+R[1][2]+R[2][2]||1;
-document.getElementById('mbar').innerHTML=R.map(r=>'<i style="width:'+(r[2]/kt*100)+'%;background:'+r[3]+'"></i>').join('');
-const gm=Math.max(1,TP,TC,TF),mx=R.reduce((x,y)=>y[2]>x[2]?y:x),sh=['Prot.','Carb.','Grasa'];
-document.getElementById('mrows').innerHTML=R.map(r=>'<div class="mg"><span class="ml"><span class="dot" style="background:'+r[3]+'"></span>'+r[0]+'</span><span class="mt"><i style="width:'+(r[1]/gm*100)+'%;background:'+r[3]+'"></i></span><b>'+fm(r[1])+' g</b></div>').join('');
-document.getElementById('dom').innerHTML=TP+TC+TF>0?R.map((r,i)=>'<span><span class="dot" style="background:'+r[3]+'"></span>'+sh[i]+' '+Math.round(r[2]/kt*100)+' %</span>').join('')+'<span style="width:100%">Predomina <b style="color:#fff">'+mx[0].toLowerCase()+'</b> ('+Math.round(mx[2]/kt*100)+' % de las calorías)</span>':'Añade alimentos para ver el reparto de calorías';
-document.getElementById('pk').textContent=W>0?(TP/W).toFixed(1).replace('.',',')+' g de proteína por kg (habitual: ~2)':'';
+const gm=Math.max(1,TP,TC,TF),mx=R.reduce((x,y)=>y[2]>x[2]?y:x);
+document.getElementById('mrows').innerHTML=R.map(r=>'<div class="mg"><span class="ml"><span class="dot" style="background:'+r[3]+'"></span>'+r[0]+'</span><span class="mt"><i style="width:'+(r[1]/gm*100)+'%;background:'+r[3]+'"></i></span><b>'+fm(r[1])+' g <small>'+Math.round(r[2]/kt*100)+' %</small></b></div>').join('');
+document.getElementById('pk').innerHTML=[TP+TC+TF>0?'Predomina <b style="color:#fff;font-weight:600">'+mx[0].toLowerCase()+'</b>':'',W>0?(TP/W).toFixed(1).replace('.',',')+' g de proteína por kg':''].filter(Boolean).join(' · ');
 }
 document.addEventListener('input',e=>{
 const t=e.target,a=t.dataset.a;
