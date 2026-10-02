@@ -60,6 +60,16 @@ summary{cursor:pointer;color:var(--a);font-size:13px;min-height:32px;display:fle
 .cl{display:flex;align-items:center;gap:10px;justify-content:space-between}
 .cl p{margin:0}
 .cl button{white-space:nowrap}
+.dn{display:grid;grid-template-columns:44px 1fr 44px;gap:8px}
+.dn button{padding:0;font-size:20px}
+.sv{min-height:36px;padding:0 10px;font-size:13px;color:var(--a);border-color:var(--a);margin-left:4px}
+.hr{display:grid;grid-template-columns:84px 1fr auto;gap:10px;align-items:center;width:100%;text-align:left;margin-bottom:6px;padding:8px 10px;min-height:48px}
+.hr[aria-current]{border-color:var(--a)}
+.hn{font-size:13px;font-weight:500}
+.hb{height:8px;background:var(--l);border-radius:4px;overflow:hidden}
+.hb i{display:block;height:100%;background:var(--a)}
+.hv{font-size:12px;color:var(--m);text-align:right;font-weight:400;line-height:1.3}
+.hv b{color:#fff;font-weight:600}
 </style>
 </head>
 <body>
@@ -69,6 +79,10 @@ summary{cursor:pointer;color:var(--a);font-size:13px;min-height:32px;display:fle
 <section class="card cl">
   <p class="mu" id="cl">Cargando…</p>
   <button id="lb" data-a="li">Iniciar sesión con Google</button>
+</section>
+<section class="card">
+  <div class="dn"><button data-a="pd" aria-label="Día anterior">‹</button><input type="date" id="dt" aria-label="Fecha"><button data-a="nd" id="nd" aria-label="Día siguiente">›</button></div>
+  <p class="mu" id="ds" style="margin:10px 0 0"></p>
 </section>
 <section class="card cc">
   <div class="hd"><h2>Tus calorías</h2></div>
@@ -95,6 +109,10 @@ summary{cursor:pointer;color:var(--a);font-size:13px;min-height:32px;display:fle
   <p class="mu" id="pk" style="margin:10px 0 0"></p>
 </section>
 <div id="m"></div>
+<section class="card">
+  <div class="hd"><h2>Historial</h2></div>
+  <div id="hl"></div>
+</section>
 <section class="card nf">
   <div class="hd"><h2>Nuevo alimento</h2></div>
   <p class="mu">Valores por 100 g o ml tal como vienen en la etiqueta. Se guarda en tu base de datos.</p>
@@ -142,7 +160,13 @@ const E=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"
 const fm=n=>Math.round(n).toLocaleString('es');
 const num=n=>(+n.toFixed(2)).toLocaleString('es');
 let F=ld('foods2',null);if(!Array.isArray(F)||!F.length)F=cl(F0);
-let P=ld('plan2',null);if(!Array.isArray(P)||P.length!==4)P=cl(DEF);
+const iso=d=>new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
+const TODAY=iso(new Date());let cur=TODAY;
+let D=ld('days2',{});if(!D||typeof D!=='object'||Array.isArray(D))D={};
+const tpl=d=>{const k=Object.keys(D).filter(x=>x<d).sort().pop();if(k)return cl(D[k].plan);const o=ld('plan2',null);return Array.isArray(o)&&o.length===4?o:cl(DEF)};
+let P=D[cur]?cl(D[cur].plan):tpl(cur),TOT={k:0,p:0,h:0,f:0};
+const ad=(d,n)=>{const x=new Date(d+'T12:00');x.setDate(x.getDate()+n);return iso(x)};
+const fD=(d,o)=>new Date(d+'T12:00').toLocaleDateString('es',o);
 let W=+ld('w1',0)||0;
 const PF=ld('pf1',{})||{};
 PF.sex=PF.sex||'m';PF.act=PF.act||1.55;if(PF.goal===undefined)PF.goal=-0.2;
@@ -151,10 +175,12 @@ const cats=()=>[...new Set(F.map(x=>x.c))];
 const unit=x=>x.c==='Bebidas'?'ml':'g';
 // Gramos equivalentes en la base de la etiqueta (cocinado o crudo)
 const eq=(x,it)=>{if(!(x.y>0)||it.s===x.b)return it.g;return x.b==='r'?it.g/x.y:it.g*x.y};
-const snap=()=>cl({foods:F,plan:P,pf:PF,w:W});
+const snap=()=>cl({foods:F,days:D,pf:PF,w:W});
 let tmr;
-function save(push=true){
-try{localStorage.setItem('foods2',JSON.stringify(F));localStorage.setItem('plan2',JSON.stringify(P));localStorage.setItem('pf1',JSON.stringify(PF));localStorage.setItem('w1',W)}catch(e){}
+function save(push=true,day=true){
+if(day)D[cur]={plan:P,k:Math.round(TOT.k),p:Math.round(TOT.p),h:Math.round(TOT.h),f:Math.round(TOT.f)};
+try{localStorage.setItem('foods2',JSON.stringify(F));localStorage.setItem('days2',JSON.stringify(D));localStorage.setItem('pf1',JSON.stringify(PF));localStorage.setItem('w1',W)}catch(e){}
+hist();
 if(push){clearTimeout(tmr);tmr=setTimeout(()=>window.cloudSave&&window.cloudSave(snap()),800)}
 }
 function calcGoal(){
@@ -206,6 +232,7 @@ T+=s;TP+=p;TC+=c;TF+=q;
 document.getElementById('mk'+a).textContent='~'+fm(s)+' kcal';
 document.getElementById('mm'+a).textContent='Prot. '+fm(p)+' g · Carb. '+fm(c)+' g · Grasa '+fm(q)+' g';
 });
+TOT={k:T,p:TP,h:TC,f:TF};
 document.getElementById('t').textContent=fm(T);
 const G=calcGoal(),lo=G?G.lo:1500,hi=G?G.hi:1700,mn=lo-500,mx2=hi+500;
 document.getElementById('cr').innerHTML=G?'<div class="stats"><div><p class="mu">Mantenimiento</p><b>'+fm(G.tdee)+' kcal</b></div><div><p class="mu">Tu objetivo</p><b>'+fm(G.t)+' kcal</b></div></div><p class="mu" style="margin:10px 0 0">'+(G.wk<-25?'Pérdida estimada: '+fm(-G.wk)+' g por semana. ':G.wk>25?'Ganancia estimada: '+fm(G.wk)+' g por semana. ':'Peso estable. ')+'Rango del día: '+fm(lo)+' a '+fm(hi)+' kcal.</p>':'<p class="mu" style="margin:0">Completa edad, peso y altura. Mientras tanto uso 1.500 a 1.700 kcal.</p>';
@@ -227,15 +254,16 @@ document.addEventListener('input',e=>{
 const t=e.target,a=t.dataset.a;
 if(a==='g'){P[t.dataset.m].i[t.dataset.i].g=Math.max(0,+t.value||0);upd();save()}
 else if(a==='c'){food(P[t.dataset.m].i[t.dataset.i].n)[t.dataset.j]=Math.max(0,+t.value||0);upd();save()}
-else if(t.id==='age'||t.id==='h'){PF[t.id]=t.value;save();upd()}
-else if(t.id==='w'){W=Math.max(0,+t.value||0);save();upd()}
+else if(t.id==='age'||t.id==='h'){PF[t.id]=t.value;save(true,false);upd()}
+else if(t.id==='w'){W=Math.max(0,+t.value||0);save(true,false);upd()}
 });
 document.addEventListener('change',e=>{
 const t=e.target,a=t.dataset.a;
 if(a==='s'){const it=P[t.dataset.m].i[t.dataset.i],x=food(t.value);it.n=x.n;it.g=x.g;it.s=x.b;draw();save()}
 else if(a==='fb'){food(P[t.dataset.m].i[t.dataset.i].n).b=t.value;draw();save()}
 else if(a==='fy'){food(P[t.dataset.m].i[t.dataset.i].n).y=Math.max(0,+t.value||0);draw();save()}
-else if(t.id==='act'||t.id==='goal'){PF[t.id]=parseFloat(t.value);save();upd()}
+else if(t.id==='act'||t.id==='goal'){PF[t.id]=parseFloat(t.value);save(true,false);upd()}
+else if(t.id==='dt')setDay(t.value);
 });
 document.addEventListener('click',e=>{
 const b=e.target.closest('button');
@@ -244,12 +272,17 @@ const a=b.dataset.a,m=+b.dataset.m,i=+b.dataset.i;
 if(a==='x')P[m].i.splice(i,1);
 else if(a==='a')P[m].i.push({n:F[0].n,g:F[0].g,s:F[0].b});
 else if(a==='st')P[m].i[i].s=b.dataset.v;
+else if(a==='pd'){setDay(ad(cur,-1));return}
+else if(a==='nd'){if(cur<TODAY)setDay(ad(cur,1));return}
+else if(a==='td'){setDay(TODAY);return}
+else if(a==='gd'){setDay(b.dataset.d);window.scrollTo({top:0,behavior:'smooth'});return}
+else if(a==='sv'){save();return}
 else if(a==='r'){if(!confirm('¿Restablecer las comidas del día? Tus alimentos guardados no se borran.'))return;P=cl(DEF)}
-else if(a==='sx'){PF.sex=b.dataset.v;save();syncSex();upd();return}
+else if(a==='sx'){PF.sex=b.dataset.v;save(true,false);syncSex();upd();return}
 else if(a==='df'){
 const n=P[m].i[i].n;
 if(F.length<2)return;
-if(P.some(z=>z.i.some(y=>y.n===n))&&!confirm('"'+n+'" está en tus comidas de hoy. Si lo eliminas, se sustituirá por otro alimento. ¿Continuar?'))return;
+if((P.some(z=>z.i.some(y=>y.n===n))||Object.values(D).some(d=>d.plan.some(z=>z.i.some(y=>y.n===n))))&&!confirm('"'+n+'" se usa en tus comidas o en el historial. Esos días lo mostrarán como otro alimento. ¿Continuar?'))return;
 if(!confirm('¿Eliminar "'+n+'" de la base de datos?'))return;
 F=F.filter(x=>x.n!==n);
 P.forEach(z=>z.i.forEach(y=>{if(!F.some(x=>x.n===y.n)){y.n=F[0].n;y.s=F[0].b}}));
@@ -266,16 +299,30 @@ else if(a==='lo'){window.cloudLogout&&window.cloudLogout();return}
 else return;
 draw();save();
 });
+function setDay(d){if(!d||d>TODAY)return dayUI();cur=d;P=D[d]?cl(D[d].plan):tpl(d);draw();hist()}
+function dayUI(){
+const t=document.getElementById('dt');t.value=cur;t.max=TODAY;
+document.getElementById('nd').disabled=cur>=TODAY;
+document.getElementById('ds').innerHTML='<b>'+(cur===TODAY?'Hoy':fD(cur,{weekday:'long',day:'numeric',month:'long'}))+'</b>: '+(D[cur]?'día guardado.':'sin guardar, se guarda al cambiar algo.')+(D[cur]?'':'<button class="sv" data-a="sv">Guardar tal cual</button>')+(cur!==TODAY?'<button class="sv" data-a="td">Volver a hoy</button>':'');
+}
+function hist(){
+const ks=Object.keys(D).sort().reverse().slice(0,30),el=document.getElementById('hl');
+if(!ks.length){el.innerHTML='<p class="mu">Aún no hay días guardados.</p>';dayUI();return}
+const mx=Math.max(1,...ks.map(k=>D[k].k||0)),l7=ks.slice(0,7),avg=l7.reduce((s,k)=>s+(D[k].k||0),0)/l7.length;
+el.innerHTML='<p class="mu">Media de los últimos '+l7.length+' días guardados: <b>'+fm(avg)+' kcal</b></p>'+ks.map(k=>'<button class="hr" data-a="gd" data-d="'+k+'"'+(k===cur?' aria-current="true"':'')+'><span class="hn">'+fD(k,{weekday:'short',day:'numeric',month:'short'})+'</span><span class="hb"><i style="width:'+((D[k].k||0)/mx*100)+'%"></i></span><span class="hv"><b>'+fm(D[k].k||0)+'</b> kcal<br>P '+(D[k].p||0)+' · C '+(D[k].h||0)+' · G '+(D[k].f||0)+'</span></button>').join('');
+dayUI();
+}
 // Datos que llegan de Firebase al iniciar sesión
 window.snap=snap;
 window.applyCloud=d=>{
 if(Array.isArray(d.foods)&&d.foods.length)F=d.foods;
-if(Array.isArray(d.plan)&&d.plan.length===4)P=d.plan;
+if(d.days&&typeof d.days==='object')D=Object.assign({},D,d.days);
+if(D[cur])P=cl(D[cur].plan);else if(Array.isArray(d.plan)&&d.plan.length===4)P=d.plan;else P=tpl(cur);
 if(d.pf)Object.assign(PF,d.pf);
 W=+d.w||0;
-save(false);fillForm();draw();
+fillForm();draw();save(true,false);
 };
-fillForm();draw();
+fillForm();draw();hist();
 </script>
 <script type="module">
 // 1) Crea un proyecto en Firebase, activa Authentication (Google) y Firestore.
