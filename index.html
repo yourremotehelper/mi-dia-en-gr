@@ -10,7 +10,7 @@
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:#fff;font:400 16px/1.5 Inter,system-ui,sans-serif}
-main{max-width:520px;margin:0 auto;padding:20px 16px 40px}
+main{max-width:520px;margin:0 auto;padding:20px 16px 96px}
 h1,h2,.big{font-family:"Archivo Black",Impact,sans-serif;font-weight:400;margin:0}
 h1{font-size:28px;line-height:1.15;margin:8px 0 4px}
 h2{font-size:18px}
@@ -70,19 +70,61 @@ summary{cursor:pointer;color:var(--a);font-size:13px;min-height:32px;display:fle
 .hb i{display:block;height:100%;background:var(--a)}
 .hv{font-size:12px;color:var(--m);text-align:right;font-weight:400;line-height:1.3}
 .hv b{color:#fff;font-weight:600}
+#tb{position:fixed;left:0;right:0;bottom:0;z-index:10;display:grid;grid-template-columns:repeat(3,1fr);background:var(--c);border-top:1px solid var(--l);padding-bottom:env(safe-area-inset-bottom,0px)}
+#tb button{border:0;border-radius:0;background:none;color:var(--m);min-height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px;font-weight:500}
+#tb button[aria-current="page"]{color:var(--a)}
+#sh{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.65);display:flex;align-items:flex-end;justify-content:center}
+#sh[hidden]{display:none}
+.sheet{background:var(--c);width:100%;max-width:520px;max-height:88%;overflow:auto;border-radius:16px 16px 0 0;border:1px solid var(--l);padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px))}
+.gh{font-size:12px;color:var(--m);margin:14px 0 6px}
+.fo{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;text-align:left;margin-bottom:6px;font-weight:400}
+.fo b{font-weight:600}
+.fo span{color:var(--m);font-size:12px;white-space:nowrap}
+.wc{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;height:170px;margin-top:12px}
+.wcol{display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;padding:0;border:0;background:none;min-height:0}
+.wb{flex:1;width:100%;display:flex;align-items:flex-end;background:var(--l);border-radius:6px;overflow:hidden;min-height:0}
+.wb i{display:block;width:100%}
+.wv{font-size:11px;color:var(--m)}
+.wl{font-size:12px}
+.fr{display:flex;gap:6px;margin-bottom:6px}
+.fr .fo{flex:1;min-width:0;margin-bottom:0}
+.fe{width:44px;padding:0;color:var(--m);font-size:16px}
 </style>
 </head>
 <body>
 <main>
+<div id="p_d">
 <h1>Mi día en gramos</h1>
-<p class="sub">Pon los datos de la etiqueta, pesa lo que comes y mira calorías y macros reales.</p>
-<section class="card cl">
-  <p class="mu" id="cl">Cargando…</p>
-  <button id="lb" data-a="li">Iniciar sesión con Google</button>
-</section>
 <section class="card">
   <div class="dn"><button data-a="pd" aria-label="Día anterior">‹</button><input type="date" id="dt" aria-label="Fecha"><button data-a="nd" id="nd" aria-label="Día siguiente">›</button></div>
   <p class="mu" id="ds" style="margin:10px 0 0"></p>
+</section>
+<section class="card">
+  <p class="big"><span id="t"></span> <small>kcal</small></p>
+  <div class="bar"><div class="band"></div><div class="mk" id="mk"></div></div>
+  <div class="sc"><span id="s1"></span><span id="s2"></span><span id="s3"></span></div>
+  <p id="st"></p>
+</section>
+<section class="card">
+  <div class="hd"><h2>Macros del día</h2></div>
+  <p class="mu" id="dom"></p>
+  <div id="mbar"></div>
+  <div id="mrows"></div>
+  <p class="mu" id="pk" style="margin:10px 0 0"></p>
+</section>
+<div id="m"></div>
+<button data-a="r" style="width:100%">Restablecer las comidas de este día</button>
+</div>
+<div id="p_w" hidden>
+<h1>Semana</h1>
+<section class="card"><div id="wk"></div></section>
+<section class="card"><div class="hd"><h2>Historial</h2></div><div id="hl"></div></section>
+</div>
+<div id="p_s" hidden>
+<h1>Ajustes</h1>
+<section class="card cl">
+  <p class="mu" id="cl">Cargando…</p>
+  <button id="lb" data-a="li">Iniciar sesión con Google</button>
 </section>
 <section class="card cc">
   <div class="hd"><h2>Tus calorías</h2></div>
@@ -96,46 +138,47 @@ summary{cursor:pointer;color:var(--a);font-size:13px;min-height:32px;display:fle
   <div id="cr"></div>
 </section>
 <section class="card">
-  <p class="big"><span id="t"></span> <small>kcal al día</small></p>
-  <div class="bar"><div class="band"></div><div class="mk" id="mk"></div></div>
-  <div class="sc"><span id="s1"></span><span id="s2"></span><span id="s3"></span></div>
-  <p id="st"></p>
+  <div class="hd"><h2>Mis alimentos</h2></div>
+  <p class="mu">Edita la etiqueta, el rendimiento o el nombre de los alimentos guardados, o elimínalos.</p>
+  <button class="add" data-a="mg">Gestionar alimentos</button>
 </section>
-<section class="card">
-  <div class="hd"><h2>Macros del día</h2></div>
-  <p class="mu" id="dom"></p>
-  <div id="mbar"></div>
-  <div id="mrows"></div>
-  <p class="mu" id="pk" style="margin:10px 0 0"></p>
-</section>
-<div id="m"></div>
-<section class="card">
-  <div class="hd"><h2>Historial</h2></div>
-  <div id="hl"></div>
-</section>
-<section class="card nf">
-  <div class="hd"><h2>Nuevo alimento</h2></div>
-  <p class="mu">Valores por 100 g o ml tal como vienen en la etiqueta. Se guarda en tu base de datos.</p>
-  <label for="nc">Grupo</label>
-  <input id="nc" list="cats" autocomplete="off" placeholder="Elige uno o escribe un grupo nuevo">
-  <datalist id="cats"></datalist>
-  <label for="nn">Nombre</label>
-  <input id="nn" autocomplete="off" placeholder="Ej.: Arroz basmati">
-  <div class="g4">
-    <div><label for="nk">kcal</label><input id="nk" type="number" inputmode="decimal" min="0" step="any"></div>
-    <div><label for="np">Prot.</label><input id="np" type="number" inputmode="decimal" min="0" step="any"></div>
-    <div><label for="nh">Carb.</label><input id="nh" type="number" inputmode="decimal" min="0" step="any"></div>
-    <div><label for="nf">Grasa</label><input id="nf" type="number" inputmode="decimal" min="0" step="any"></div>
-  </div>
-  <label for="nb">La etiqueta se refiere a</label>
-  <select id="nb"><option value="c">Cocinado o tal cual</option><option value="r">Crudo o seco</option></select>
-  <label for="ny">Rendimiento al cocinar (opcional)</label>
-  <input id="ny" type="number" inputmode="decimal" min="0" step="any" placeholder="Gramos cocinados por 1 g crudo. Ej.: 2,8 para arroz">
-  <button class="add" data-a="nf">Guardar alimento</button>
-</section>
-<p class="note">Si un alimento tiene rendimiento, en cada comida puedes elegir si pesaste crudo o cocinado y la app convierte el peso a la base de la etiqueta. Sin sesión, todo se guarda solo en este dispositivo.</p>
-<button data-a="r" style="width:100%">Restablecer comidas del día</button>
+<p class="note">Cada alimento guarda los datos de su etiqueta. Si tiene rendimiento, en cada comida eliges si pesaste crudo o cocinado y la app convierte el peso. Sin sesión, todo se guarda solo en este dispositivo.</p>
+</div>
 </main>
+<nav id="tb" aria-label="Secciones">
+<button data-a="tab" data-v="d" aria-current="page"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>Día</button>
+<button data-a="tab" data-v="w" aria-current="false"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20v-8M12 20V5M19 20v-5"/></svg>Semana</button>
+<button data-a="tab" data-v="s" aria-current="false"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>Ajustes</button>
+</nav>
+<div id="sh" hidden>
+<div class="sheet nf" role="dialog" aria-modal="true" aria-labelledby="sht">
+  <div class="hd"><h2 id="sht">Añadir alimento</h2><button class="x" data-a="cs" aria-label="Cerrar">×</button></div>
+  <input id="sq" type="search" autocomplete="off" placeholder="Buscar entre tus alimentos" aria-label="Buscar alimento">
+  <div id="sl"></div>
+  <button class="add" id="nwb" data-a="nw" style="margin-top:12px">+ Nuevo alimento</button>
+  <div id="nfw" hidden>
+    <p class="mu" style="margin-top:14px">Valores por 100 g o ml tal como vienen en la etiqueta.</p>
+    <label for="nc">Grupo</label>
+    <input id="nc" list="cats" autocomplete="off" placeholder="Elige uno o escribe un grupo nuevo">
+    <datalist id="cats"></datalist>
+    <label for="nn">Nombre</label>
+    <input id="nn" autocomplete="off" placeholder="Ej.: Arroz basmati">
+    <div class="g4">
+      <div><label for="nk">kcal</label><input id="nk" type="number" inputmode="decimal" min="0" step="any"></div>
+      <div><label for="np">Prot.</label><input id="np" type="number" inputmode="decimal" min="0" step="any"></div>
+      <div><label for="nh">Carb.</label><input id="nh" type="number" inputmode="decimal" min="0" step="any"></div>
+      <div><label for="nf">Grasa</label><input id="nf" type="number" inputmode="decimal" min="0" step="any"></div>
+    </div>
+    <label for="nb">La etiqueta se refiere a</label>
+    <select id="nb"><option value="c">Cocinado o tal cual</option><option value="r">Crudo o seco</option></select>
+    <label for="ny">Rendimiento al cocinar (opcional)</label>
+    <input id="ny" type="number" inputmode="decimal" min="0" step="any" placeholder="Gramos cocinados por 1 g crudo. Ej.: 2,8 para arroz">
+    <button class="add" id="nsv" data-a="nf">Guardar y añadir a la comida</button>
+    <button class="del" id="ndl" data-a="dfe" style="margin-top:8px" hidden>Eliminar este alimento</button>
+    <button class="del" data-a="cf" style="margin-top:8px;color:#fff">Cancelar</button>
+  </div>
+</div>
+</div>
 <script>
 const DB=[
 ['Proteína','Pollo sin piel cocido',210,100,27,0,11],['Proteína','Chuletas cocidas',230,100,25,0,14],['Proteína','Huevos',155,110,13,1,11],['Proteína','Jamón York',110,40,18,1,4],['Proteína','Yogur griego natural',112,125,6,4,8],
@@ -256,6 +299,7 @@ if(a==='g'){P[t.dataset.m].i[t.dataset.i].g=Math.max(0,+t.value||0);upd();save()
 else if(a==='c'){food(P[t.dataset.m].i[t.dataset.i].n)[t.dataset.j]=Math.max(0,+t.value||0);upd();save()}
 else if(t.id==='age'||t.id==='h'){PF[t.id]=t.value;save(true,false);upd()}
 else if(t.id==='w'){W=Math.max(0,+t.value||0);save(true,false);upd()}
+else if(t.id==='sq')renderList();
 });
 document.addEventListener('change',e=>{
 const t=e.target,a=t.dataset.a;
@@ -266,17 +310,26 @@ else if(t.id==='act'||t.id==='goal'){PF[t.id]=parseFloat(t.value);save(true,fals
 else if(t.id==='dt')setDay(t.value);
 });
 document.addEventListener('click',e=>{
+if(e.target.id==='sh'){closeSheet();return}
 const b=e.target.closest('button');
 if(!b)return;
 const a=b.dataset.a,m=+b.dataset.m,i=+b.dataset.i;
 if(a==='x')P[m].i.splice(i,1);
-else if(a==='a')P[m].i.push({n:F[0].n,g:F[0].g,s:F[0].b});
+else if(a==='a'){openSheet(m);return}
+else if(a==='pf'){const x=food(b.dataset.n);P[SM].i.push({n:x.n,g:x.g,s:x.b});closeSheet()}
 else if(a==='st')P[m].i[i].s=b.dataset.v;
 else if(a==='pd'){setDay(ad(cur,-1));return}
 else if(a==='nd'){if(cur<TODAY)setDay(ad(cur,1));return}
 else if(a==='td'){setDay(TODAY);return}
-else if(a==='gd'){setDay(b.dataset.d);window.scrollTo({top:0,behavior:'smooth'});return}
+else if(a==='gd'){setDay(b.dataset.d);showTab('d');return}
 else if(a==='sv'){save();return}
+else if(a==='cs'){closeSheet();return}
+else if(a==='tab'){showTab(b.dataset.v);return}
+else if(a==='nw'){showForm(true);return}
+else if(a==='mg'){openSheet(-1);return}
+else if(a==='ef'){showForm(true,b.dataset.n);return}
+else if(a==='cf'){showForm(false);renderList();return}
+else if(a==='dfe'){if(!delFood(ED))return;showForm(false);renderList()}
 else if(a==='r'){if(!confirm('¿Restablecer las comidas del día? Tus alimentos guardados no se borran.'))return;P=cl(DEF)}
 else if(a==='sx'){PF.sex=b.dataset.v;save(true,false);syncSex();upd();return}
 else if(a==='df'){
@@ -290,9 +343,12 @@ P.forEach(z=>z.i.forEach(y=>{if(!F.some(x=>x.n===y.n)){y.n=F[0].n;y.s=F[0].b}}))
 else if(a==='nf'){
 const g=id=>document.getElementById(id),c=g('nc').value.trim(),n=g('nn').value.trim();
 if(!c||!n){alert('Escribe el grupo y el nombre del alimento.');return}
-if(F.some(x=>x.n.toLowerCase()===n.toLowerCase())){alert('Ya existe un alimento con ese nombre.');return}
+if(F.some(x=>x.n.toLowerCase()===n.toLowerCase()&&x.n!==ED)){alert('Ya existe un alimento con ese nombre.');return}
+if(ED){const x=food(ED),old=x.n;Object.assign(x,{c:c,n:n,k:Math.max(0,+g('nk').value||0),p:Math.max(0,+g('np').value||0),h:Math.max(0,+g('nh').value||0),f:Math.max(0,+g('nf').value||0),b:g('nb').value,y:Math.max(0,+g('ny').value||0)});
+if(old!==n){const rn=z=>z.i.forEach(y=>{if(y.n===old)y.n=n});P.forEach(rn);Object.values(D).forEach(d=>d.plan.forEach(rn))}
+showForm(false);renderList();draw();save();return}
 F.push({c:c,n:n,k:Math.max(0,+g('nk').value||0),p:Math.max(0,+g('np').value||0),h:Math.max(0,+g('nh').value||0),f:Math.max(0,+g('nf').value||0),g:100,b:g('nb').value,y:Math.max(0,+g('ny').value||0)});
-['nc','nn','nk','np','nh','nf','ny'].forEach(id=>g(id).value='');
+if(SM>=0){P[SM].i.push({n:n,g:100,s:g('nb').value});closeSheet()}else{showForm(false);renderList()}
 }
 else if(a==='li'){window.cloudLogin&&window.cloudLogin();return}
 else if(a==='lo'){window.cloudLogout&&window.cloudLogout();return}
@@ -306,11 +362,48 @@ document.getElementById('nd').disabled=cur>=TODAY;
 document.getElementById('ds').innerHTML='<b>'+(cur===TODAY?'Hoy':fD(cur,{weekday:'long',day:'numeric',month:'long'}))+'</b>: '+(D[cur]?'día guardado.':'sin guardar, se guarda al cambiar algo.')+(D[cur]?'':'<button class="sv" data-a="sv">Guardar tal cual</button>')+(cur!==TODAY?'<button class="sv" data-a="td">Volver a hoy</button>':'');
 }
 function hist(){
+wk();
 const ks=Object.keys(D).sort().reverse().slice(0,30),el=document.getElementById('hl');
 if(!ks.length){el.innerHTML='<p class="mu">Aún no hay días guardados.</p>';dayUI();return}
 const mx=Math.max(1,...ks.map(k=>D[k].k||0)),l7=ks.slice(0,7),avg=l7.reduce((s,k)=>s+(D[k].k||0),0)/l7.length;
 el.innerHTML='<p class="mu">Media de los últimos '+l7.length+' días guardados: <b>'+fm(avg)+' kcal</b></p>'+ks.map(k=>'<button class="hr" data-a="gd" data-d="'+k+'"'+(k===cur?' aria-current="true"':'')+'><span class="hn">'+fD(k,{weekday:'short',day:'numeric',month:'short'})+'</span><span class="hb"><i style="width:'+((D[k].k||0)/mx*100)+'%"></i></span><span class="hv"><b>'+fm(D[k].k||0)+'</b> kcal<br>P '+(D[k].p||0)+' · C '+(D[k].h||0)+' · G '+(D[k].f||0)+'</span></button>').join('');
 dayUI();
+}
+let SM=0;
+const recents=()=>{const o=[];Object.keys(D).sort().reverse().forEach(k=>D[k].plan.forEach(m=>m.i.forEach(i=>{if(!o.includes(i.n)&&F.some(x=>x.n===i.n))o.push(i.n)})));return o.slice(0,8)};
+function renderList(){
+const q=document.getElementById('sq').value.trim().toLowerCase(),btn=x=>'<div class="fr"><button class="fo" data-a="'+(SM<0?'ef':'pf')+'" data-n="'+E(x.n)+'"><b>'+E(x.n)+'</b><span>'+fm(x.k)+' kcal/100 '+unit(x)+'</span></button>'+(SM<0?'':'<button class="fe" data-a="ef" data-n="'+E(x.n)+'" aria-label="Editar '+E(x.n)+'">✎</button>')+'</div>';
+let h='';
+if(!q){const r=recents().map(food);if(r.length)h+='<p class="gh">Recientes</p>'+r.map(btn).join('')}
+cats().forEach(c=>{const l=F.filter(x=>x.c===c&&(!q||x.n.toLowerCase().includes(q)||c.toLowerCase().includes(q)));if(l.length)h+='<p class="gh">'+E(c)+'</p>'+l.map(btn).join('')});
+document.getElementById('sl').innerHTML=h||'<p class="mu">Sin resultados. Créalo con el botón de abajo.</p>';
+}
+let ED=null;
+function showForm(on,n){
+ED=on&&n?n:null;
+const x=ED?food(ED):null,g=id=>document.getElementById(id);
+g('nfw').hidden=!on;g('sl').hidden=on;g('sq').hidden=on;g('nwb').hidden=on;
+g('sht').textContent=on?(ED?'Editar alimento':'Nuevo alimento'):(SM<0?'Mis alimentos':'Añadir a '+P[SM].n.toLowerCase());
+g('nsv').textContent=ED?'Guardar cambios':(SM<0?'Guardar alimento':'Guardar y añadir a la comida');
+g('ndl').hidden=!ED;
+if(on){g('nc').value=x?x.c:'';g('nn').value=x?x.n:g('sq').value;g('nk').value=x?x.k:'';g('np').value=x?x.p:'';g('nh').value=x?x.h:'';g('nf').value=x?x.f:'';g('nb').value=x?x.b:'c';g('ny').value=x&&x.y?x.y:'';document.querySelector('.sheet').scrollTop=0}
+}
+function delFood(n){
+if(F.length<2)return false;
+const used=P.some(z=>z.i.some(y=>y.n===n))||Object.values(D).some(d=>d.plan.some(z=>z.i.some(y=>y.n===n)));
+if(used&&!confirm('"'+n+'" se usa en tus comidas o en el historial. Esos días lo mostrarán como otro alimento. ¿Continuar?'))return false;
+if(!confirm('¿Eliminar "'+n+'" de la base de datos?'))return false;
+F=F.filter(x=>x.n!==n);
+P.forEach(z=>z.i.forEach(y=>{if(!F.some(x=>x.n===y.n)){y.n=F[0].n;y.s=F[0].b}}));
+return true}
+function openSheet(m){SM=m;document.getElementById('sq').value='';showForm(false);renderList();document.getElementById('sh').hidden=false;document.body.style.overflow='hidden'}
+function closeSheet(){document.getElementById('sh').hidden=true;document.body.style.overflow=''}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!document.getElementById('sh').hidden)closeSheet()});
+function showTab(v){['d','w','s'].forEach(k=>{document.getElementById('p_'+k).hidden=k!==v});document.querySelectorAll('#tb button').forEach(x=>x.setAttribute('aria-current',x.dataset.v===v?'page':'false'));window.scrollTo(0,0)}
+function wk(){
+const G=calcGoal(),lo=G?G.lo:1500,hi=G?G.hi:1700,days=[0,1,2,3,4,5,6].map(i=>ad(TODAY,i-6)),rs=days.filter(k=>D[k]),el=document.getElementById('wk');
+const mx=Math.max(hi,...rs.map(k=>D[k].k||0)),n=rs.length||1,av=f=>rs.reduce((s,k)=>s+(D[k][f]||0),0)/n,ok=rs.filter(k=>D[k].k>=lo&&D[k].k<=hi).length;
+el.innerHTML='<div class="hd"><h2>Últimos 7 días</h2></div><div class="stats"><div><p class="mu">Media diaria</p><b>'+fm(av('k'))+' kcal</b></div><div><p class="mu">En objetivo</p><b>'+ok+' de '+rs.length+'</b></div><div><p class="mu">Proteína media</p><b>'+fm(av('p'))+' g</b></div><div><p class="mu">Rango objetivo</p><b>'+fm(lo)+'–'+fm(hi)+'</b></div></div><div class="wc">'+days.map(k=>{const r=D[k],g=r?Math.max(4,(r.k||0)/mx*100):0,good=r&&r.k>=lo&&r.k<=hi;return '<button class="wcol" data-a="gd" data-d="'+k+'" aria-label="'+fD(k,{weekday:'long',day:'numeric',month:'long'})+'"><span class="wv">'+(r?fm(r.k):'–')+'</span><span class="wb"><i style="height:'+g+'%;background:'+(good?'#5ACAE4':'#f0a35e')+'"></i></span><span class="wl">'+fD(k,{weekday:'narrow'})+'</span></button>'}).join('')+'</div>';
 }
 // Datos que llegan de Firebase al iniciar sesión
 window.snap=snap;
@@ -322,7 +415,7 @@ if(d.pf)Object.assign(PF,d.pf);
 W=+d.w||0;
 fillForm();draw();save(true,false);
 };
-fillForm();draw();hist();
+fillForm();draw();hist();showTab('d');
 </script>
 <script type="module">
 // 1) Crea un proyecto en Firebase, activa Authentication (Google) y Firestore.
