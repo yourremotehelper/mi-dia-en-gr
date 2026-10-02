@@ -89,6 +89,20 @@ summary{cursor:pointer;color:var(--a);font-size:13px;min-height:32px;display:fle
 .fr{display:flex;gap:6px;margin-bottom:6px}
 .fr .fo{flex:1;min-width:0;margin-bottom:0}
 .fe{width:44px;padding:0;color:var(--m);font-size:16px}
+.mg{display:grid;grid-template-columns:112px 1fr 56px;align-items:center;gap:10px;padding:5px 0}
+.ml{font-size:13px;display:flex;align-items:center}
+.mt{height:10px;background:var(--l);border-radius:5px;overflow:hidden}
+.mt i{display:block;height:100%;border-radius:5px}
+.mg b{text-align:right;font-weight:600;font-size:14px}
+.pc{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;color:var(--m)}
+.pc .dot{width:8px;height:8px;margin-right:6px}
+.mh{width:100%;display:flex;justify-content:space-between;align-items:center;gap:8px;background:none;border:0;border-radius:8px;padding:0;min-height:44px;font:inherit;font-weight:400;color:inherit;text-align:left}
+.mh b{font:600 15px Inter,system-ui,sans-serif}
+.mn{display:flex;align-items:center;gap:8px}
+.cv{flex:none;transition:transform .15s}
+.mh[aria-expanded="false"] .cv{transform:rotate(-90deg)}
+h2.mhd{margin:0}
+@media (prefers-reduced-motion:reduce){.cv{transition:none}}
 </style>
 </head>
 <body>
@@ -104,13 +118,13 @@ summary{cursor:pointer;color:var(--a);font-size:13px;min-height:32px;display:fle
   <div class="bar"><div class="band"></div><div class="mk" id="mk"></div></div>
   <div class="sc"><span id="s1"></span><span id="s2"></span><span id="s3"></span></div>
   <p id="st"></p>
+  <div id="mbar" style="margin-top:14px"></div>
+  <div class="pc" id="dom"></div>
 </section>
 <section class="card">
   <div class="hd"><h2>Macros del día</h2></div>
-  <p class="mu" id="dom"></p>
-  <div id="mbar"></div>
   <div id="mrows"></div>
-  <p class="mu" id="pk" style="margin:10px 0 0"></p>
+  <p class="mu" id="pk" style="margin:6px 0 0"></p>
 </section>
 <div id="m"></div>
 <button data-a="r" style="width:100%">Restablecer las comidas de este día</button>
@@ -207,7 +221,7 @@ const iso=d=>new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice
 const TODAY=iso(new Date());let cur=TODAY;
 let D=ld('days2',{});if(!D||typeof D!=='object'||Array.isArray(D))D={};
 const tpl=d=>{const k=Object.keys(D).filter(x=>x<d).sort().pop();if(k)return cl(D[k].plan);const o=ld('plan2',null);return Array.isArray(o)&&o.length===4?o:cl(DEF)};
-let P=D[cur]?cl(D[cur].plan):tpl(cur),TOT={k:0,p:0,h:0,f:0};
+let P=D[cur]?cl(D[cur].plan):tpl(cur),TOT={k:0,p:0,h:0,f:0},CO={};
 const ad=(d,n)=>{const x=new Date(d+'T12:00');x.setDate(x.getDate()+n);return iso(x)};
 const fD=(d,o)=>new Date(d+'T12:00').toLocaleDateString('es',o);
 let W=+ld('w1',0)||0;
@@ -253,7 +267,7 @@ r+='<div class="r"><select aria-label="Alimento" data-a="s" '+d+'>'+opts(it.n)+'
 '<div class="r4"><div><label for="'+id+'b">La etiqueta es de</label><select id="'+id+'b" data-a="fb" '+d+'><option value="c"'+(x.b==='c'?' selected':'')+'>Cocinado o tal cual</option><option value="r"'+(x.b==='r'?' selected':'')+'>Crudo o seco</option></select></div><div><label for="'+id+'y">Rendimiento (×)</label><input type="number" inputmode="decimal" min="0" step="any" id="'+id+'y" value="'+(x.y||'')+'" placeholder="Sin conversión" data-a="fy" '+d+'></div></div>'+
 '<button class="del" data-a="df" '+d+'>Eliminar este alimento de la base de datos</button></details></div>';
 });
-h+='<section class="card"><div class="hd"><h2>'+m.n+'</h2><b id="mk'+a+'"></b></div><p class="mu" id="mm'+a+'"></p>'+r+'<button class="add" data-a="a" data-m="'+a+'">Añadir alimento</button></section>';
+h+='<section class="card"><h2 class="mhd"><button class="mh" data-a="tg" data-m="'+a+'" aria-expanded="'+!CO[a]+'" aria-controls="bd'+a+'"><span class="mn"><svg class="cv" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>'+m.n+'</span><b id="mk'+a+'"></b></button></h2><p class="mu" id="mm'+a+'" style="margin:0 0 10px"></p><div id="bd'+a+'"'+(CO[a]?' hidden':'')+'>'+r+'<button class="add" data-a="a" data-m="'+a+'">Añadir alimento</button></div></section>';
 });
 document.getElementById('m').innerHTML=h;
 document.getElementById('cats').innerHTML=cats().map(c=>'<option value="'+E(c)+'">').join('');
@@ -288,9 +302,9 @@ else{st.textContent='Te faltan '+fm(lo-T)+' kcal para el mínimo';st.style.color
 const R=[['Proteína',TP,TP*4,'#5ACAE4'],['Carbohidratos',TC,TC*4,'#f2f2f2'],['Grasas',TF,TF*9,'#7a7a7a']];
 const kt=R[0][2]+R[1][2]+R[2][2]||1;
 document.getElementById('mbar').innerHTML=R.map(r=>'<i style="width:'+(r[2]/kt*100)+'%;background:'+r[3]+'"></i>').join('');
-document.getElementById('mrows').innerHTML=R.map(r=>'<div class="mr"><span><span class="dot" style="background:'+r[3]+'"></span>'+r[0]+'</span><span><b>'+fm(r[1])+' g</b> · '+Math.round(r[2]/kt*100)+'% de las calorías</span></div>').join('');
-const mx=R.reduce((x,y)=>y[2]>x[2]?y:x);
-document.getElementById('dom').textContent='Hoy predominan: '+mx[0].toLowerCase();
+const gm=Math.max(1,TP,TC,TF),mx=R.reduce((x,y)=>y[2]>x[2]?y:x),sh=['Prot.','Carb.','Grasa'];
+document.getElementById('mrows').innerHTML=R.map(r=>'<div class="mg"><span class="ml"><span class="dot" style="background:'+r[3]+'"></span>'+r[0]+'</span><span class="mt"><i style="width:'+(r[1]/gm*100)+'%;background:'+r[3]+'"></i></span><b>'+fm(r[1])+' g</b></div>').join('');
+document.getElementById('dom').innerHTML=TP+TC+TF>0?R.map((r,i)=>'<span><span class="dot" style="background:'+r[3]+'"></span>'+sh[i]+' '+Math.round(r[2]/kt*100)+' %</span>').join('')+'<span style="width:100%">Predomina <b style="color:#fff">'+mx[0].toLowerCase()+'</b> ('+Math.round(mx[2]/kt*100)+' % de las calorías)</span>':'Añade alimentos para ver el reparto de calorías';
 document.getElementById('pk').textContent=W>0?(TP/W).toFixed(1).replace('.',',')+' g de proteína por kg (habitual: ~2)':'';
 }
 document.addEventListener('input',e=>{
@@ -324,6 +338,7 @@ else if(a==='td'){setDay(TODAY);return}
 else if(a==='gd'){setDay(b.dataset.d);showTab('d');return}
 else if(a==='sv'){save();return}
 else if(a==='cs'){closeSheet();return}
+else if(a==='tg'){CO[m]=!CO[m];document.getElementById('bd'+m).hidden=!!CO[m];b.setAttribute('aria-expanded',!CO[m]);return}
 else if(a==='tab'){showTab(b.dataset.v);return}
 else if(a==='nw'){showForm(true);return}
 else if(a==='mg'){openSheet(-1);return}
@@ -355,7 +370,7 @@ else if(a==='lo'){window.cloudLogout&&window.cloudLogout();return}
 else return;
 draw();save();
 });
-function setDay(d){if(!d||d>TODAY)return dayUI();cur=d;P=D[d]?cl(D[d].plan):tpl(d);draw();hist()}
+function setDay(d){if(!d||d>TODAY)return dayUI();cur=d;CO={};P=D[d]?cl(D[d].plan):tpl(d);draw();hist()}
 function dayUI(){
 const t=document.getElementById('dt');t.value=cur;t.max=TODAY;
 document.getElementById('nd').disabled=cur>=TODAY;
