@@ -280,10 +280,14 @@ fillForm();draw();
 <script type="module">
 // 1) Crea un proyecto en Firebase, activa Authentication (Google) y Firestore.
 // 2) En "Configuración del proyecto > Tus apps > Web" copia tu firebaseConfig y pégalo aquí.
-const CFG=null;
-/* Ejemplo:
-const CFG={apiKey:"...",authDomain:"TU-PROYECTO.firebaseapp.com",projectId:"TU-PROYECTO",appId:"..."};
-*/
+const CFG={
+  apiKey:"AIzaSyCb5veOlsEKZf-u4BEanm07sNazxZiUMTE",
+  authDomain:"mi-dia-en-gr.firebaseapp.com",
+  projectId:"mi-dia-en-gr",
+  storageBucket:"mi-dia-en-gr.firebasestorage.app",
+  messagingSenderId:"938828229192",
+  appId:"1:938828229192:web:b418cec3b320c53ff8067d"
+};
 const st=document.getElementById('cl'),lb=document.getElementById('lb');
 if(!CFG){
   st.textContent='Modo local: los datos se guardan solo en este dispositivo.';
