@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mi día en gramos</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#0a0a0a;--c:#141414;--l:#262626;--m:#9a9a9a;--a:#5ACAE4;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:#fff;font:400 16px/1.5 Inter,system-ui,sans-serif}
+main{max-width:520px;margin:0 auto;padding:20px 16px 40px}
+h1,h2,.big{font-family:"Archivo Black",Impact,sans-serif;font-weight:400;margin:0}
+h1{font-size:28px;line-height:1.15;margin:8px 0 4px}
+h2{font-size:18px}
+.sub{color:var(--m);margin:0 0 16px}
+.card{background:var(--c);border:1px solid var(--l);border-radius:14px;padding:14px;margin-bottom:14px}
+.hd{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.mu{color:var(--m);font-size:13px;margin:0 0 10px}
+.big{font-size:44px;line-height:1}
+.big small{font:400 14px Inter,sans-serif;color:var(--m)}
+.bar{position:relative;height:10px;background:var(--l);border-radius:5px;margin:14px 0 6px}
+.band{position:absolute;left:41.67%;width:16.67%;top:0;height:10px;background:rgba(90,202,228,.35);border-radius:5px}
+.mk{position:absolute;top:-3px;width:4px;height:16px;border-radius:2px;background:#fff;margin-left:-2px}
+.sc{display:flex;justify-content:space-between;font-size:12px;color:var(--m)}
+#st{font-weight:600;margin:10px 0 0}
+#mbar{display:flex;height:14px;border-radius:7px;overflow:hidden;background:var(--l);margin:6px 0 10px}
+#mbar i{display:block;height:100%}
+.mr{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--l)}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px}
+.r{margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--l)}
+.r2{display:flex;align-items:center;gap:8px;margin-top:8px}
+.r2 b{margin-left:auto;font-weight:600}
+.r3{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:8px}
+.r4{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+label{display:block;font-size:12px;color:var(--m)}
+.r3 input{padding:8px 4px;min-height:40px;text-align:center}
+select,input{width:100%;font:inherit;color:#fff;background:var(--bg);border:1px solid var(--l);border-radius:8px;padding:10px;min-height:44px}
+.r2 input{width:84px}
+button{font:inherit;font-weight:600;color:#fff;background:var(--bg);border:1px solid var(--l);border-radius:8px;min-height:44px;padding:0 14px;cursor:pointer}
+.x{width:44px;padding:0;font-size:20px}
+.add{width:100%;color:var(--a);border-color:var(--a)}
+.del{width:100%;color:#f0a35e;border-color:var(--l);min-height:40px}
+select:focus-visible,input:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--a);outline-offset:2px}
+.cc label,.nf label{font-size:13px;font-weight:600;margin:0 0 4px;color:#fff}
+.cc select,.nf input,.nf select{margin-bottom:12px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0}
+.cc .seg{margin-bottom:12px}
+.seg button[aria-pressed="true"]{background:var(--a);color:#0a0a0a;border-color:var(--a)}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.nf .g4 label{font-size:12px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-top:12px;border-top:1px solid var(--l)}
+.stats b{font:400 20px "Archivo Black",Impact,sans-serif}
+.stats .mu{margin:0 0 2px}
+.note{color:var(--m);font-size:13px;margin:0 0 12px}
+details{margin-top:8px}
+summary{cursor:pointer;color:var(--a);font-size:13px;min-height:32px;display:flex;align-items:center}
+.cl{display:flex;align-items:center;gap:10px;justify-content:space-between}
+.cl p{margin:0}
+.cl button{white-space:nowrap}
+</style>
+</head>
+<body>
+<main>
+<h1>Mi día en gramos</h1>
+<p class="sub">Pon los datos de la etiqueta, pesa lo que comes y mira calorías y macros reales.</p>
+<section class="card cl">
+  <p class="mu" id="cl">Cargando…</p>
+  <button id="lb" data-a="li">Iniciar sesión con Google</button>
+</section>
+<section class="card cc">
+  <div class="hd"><h2>Tus calorías</h2></div>
+  <p class="mu">Datos para calcular cuánto necesitas al día.</p>
+  <div class="seg" id="sex" role="group" aria-label="Sexo"><button data-a="sx" data-v="m" aria-pressed="true">Hombre</button><button data-a="sx" data-v="f" aria-pressed="false">Mujer</button></div>
+  <div class="g3"><div><label for="age">Edad</label><input id="age" type="number" inputmode="numeric" min="14" max="99"></div><div><label for="w">Peso (kg)</label><input id="w" type="number" inputmode="decimal" min="30" max="300"></div><div><label for="h">Altura (cm)</label><input id="h" type="number" inputmode="numeric" min="120" max="230"></div></div>
+  <label for="act">Actividad</label>
+  <select id="act"><option value="1.2">Sedentario (sin entrenar)</option><option value="1.375">Ligera (1–3 días por semana)</option><option value="1.55">Moderada (3–5 días por semana)</option><option value="1.725">Alta (6–7 días por semana)</option><option value="1.9">Muy alta (doble sesión o trabajo físico)</option></select>
+  <label for="goal">Objetivo</label>
+  <select id="goal"><option value="-0.2">Perder grasa (−20 %)</option><option value="0">Mantener peso</option><option value="0.1">Ganar músculo (+10 %)</option></select>
+  <div id="cr"></div>
+</section>
+<section class="card">
+  <p class="big"><span id="t"></span> <small>kcal al día</small></p>
+  <div class="bar"><div class="band"></div><div class="mk" id="mk"></div></div>
+  <div class="sc"><span id="s1"></span><span id="s2"></span><span id="s3"></span></div>
+  <p id="st"></p>
+</section>
+<section class="card">
+  <div class="hd"><h2>Macros del día</h2></div>
+  <p class="mu" id="dom"></p>
+  <div id="mbar"></div>
+  <div id="mrows"></div>
+  <p class="mu" id="pk" style="margin:10px 0 0"></p>
+</section>
+<div id="m"></div>
+<section class="card nf">
+  <div class="hd"><h2>Nuevo alimento</h2></div>
+  <p class="mu">Valores por 100 g o ml tal como vienen en la etiqueta. Se guarda en tu base de datos.</p>
+  <label for="nc">Grupo</label>
+  <input id="nc" list="cats" autocomplete="off" placeholder="Elige uno o escribe un grupo nuevo">
+  <datalist id="cats"></datalist>
+  <label for="nn">Nombre</label>
+  <input id="nn" autocomplete="off" placeholder="Ej.: Arroz basmati">
+  <div class="g4">
+    <div><label for="nk">kcal</label><input id="nk" type="number" inputmode="decimal" min="0" step="any"></div>
+    <div><label for="np">Prot.</label><input id="np" type="number" inputmode="decimal" min="0" step="any"></div>
+    <div><label for="nh">Carb.</label><input id="nh" type="number" inputmode="decimal" min="0" step="any"></div>
+    <div><label for="nf">Grasa</label><input id="nf" type="number" inputmode="decimal" min="0" step="any"></div>
+  </div>
+  <label for="nb">La etiqueta se refiere a</label>
+  <select id="nb"><option value="c">Cocinado o tal cual</option><option value="r">Crudo o seco</option></select>
+  <label for="ny">Rendimiento al cocinar (opcional)</label>
+  <input id="ny" type="number" inputmode="decimal" min="0" step="any" placeholder="Gramos cocinados por 1 g crudo. Ej.: 2,8 para arroz">
+  <button class="add" data-a="nf">Guardar alimento</button>
+</section>
+<p class="note">Si un alimento tiene rendimiento, en cada comida puedes elegir si pesaste crudo o cocinado y la app convierte el peso a la base de la etiqueta. Sin sesión, todo se guarda solo en este dispositivo.</p>
+<button data-a="r" style="width:100%">Restablecer comidas del día</button>
+</main>
+<script>
+const DB=[
+['Proteína','Pollo sin piel cocido',210,100,27,0,11],['Proteína','Chuletas cocidas',230,100,25,0,14],['Proteína','Huevos',155,110,13,1,11],['Proteína','Jamón York',110,40,18,1,4],['Proteína','Yogur griego natural',112,125,6,4,8],
+['Carbohidratos','Arroz blanco cocido',130,150,2.7,28,0.3],['Carbohidratos','Tallarines cocidos',140,150,5,27,1],['Carbohidratos','Patata cocida',85,150,2,19,0.1],['Carbohidratos','Avena en seco',370,40,13,62,7],['Carbohidratos','Pan integral de molde',250,30,9,42,4],['Carbohidratos','Palomitas caseras',450,25,10,60,18],
+['Grasas','Aceite de oliva',900,10,0,0,100],['Grasas','Mantequilla',720,10,1,0,80],['Grasas','Aguacate',160,50,2,8,14],
+['Cremas y untables','Crema de cacahuete',600,15,25,12,50],['Cremas y untables','Crema de cacao',540,15,6,57,31],['Cremas y untables','Mermelada',250,20,0.5,60,0],['Cremas y untables','Mermelada light',120,20,0.3,29,0],['Cremas y untables','Queso de untar',260,30,6,4,25],['Cremas y untables','Queso de untar light',120,30,9,5,7],['Cremas y untables','Azúcar',400,5,0,100,0],
+['Frutas','Manzana',52,150,0.3,14,0.2],['Frutas','Plátano',90,120,1.1,23,0.3],['Frutas','Naranja',47,150,0.9,12,0.1],['Frutas','Fresas',32,150,0.7,8,0.3],
+['Verduras','Verduras mixtas',30,200,2,5,0.3],['Verduras','Brócoli',34,200,2.8,7,0.4],['Verduras','Ensalada',17,150,1,3,0.2],
+['Bebidas','Agua',0,250,0,0,0],['Bebidas','Bebida zero',0,330,0,0,0],['Bebidas','Refresco con azúcar',42,330,0,10.6,0],['Bebidas','Zumo de naranja',45,200,0.7,10,0.2],['Bebidas','Leche semidesnatada',46,200,3.3,4.8,1.6],['Bebidas','Leche desnatada',35,200,3.4,4.9,0.1],['Bebidas','Café solo',2,60,0.1,0,0],['Bebidas','Café con leche',24,200,1.7,2.4,0.8]];
+// Rendimiento aproximado (g cocinados por 1 g crudo). Editable en cada alimento.
+const Y={'Pollo sin piel cocido':.75,'Chuletas cocidas':.7,'Arroz blanco cocido':2.8,'Tallarines cocidos':2.3,'Patata cocida':.95,'Brócoli':.9,'Verduras mixtas':.85};
+const F0=DB.map(x=>({c:x[0],n:x[1],k:x[2],g:x[3],p:x[4],h:x[5],f:x[6],b:'c',y:Y[x[1]]||0}));
+const mk=(n,g)=>({n:n,g:g,s:'c'});
+const DEF=[
+{n:'Desayuno',i:[mk('Avena en seco',40),mk('Yogur griego natural',125),mk('Manzana',150),mk('Crema de cacahuete',8)]},
+{n:'Almuerzo',i:[mk('Verduras mixtas',200),mk('Pollo sin piel cocido',100),mk('Arroz blanco cocido',150),mk('Aceite de oliva',10)]},
+{n:'Merienda',i:[mk('Pan integral de molde',30),mk('Jamón York',40),mk('Plátano',120)]},
+{n:'Cena',i:[mk('Verduras mixtas',200),mk('Huevos',110),mk('Patata cocida',150),mk('Aceite de oliva',10)]}];
+const cl=o=>JSON.parse(JSON.stringify(o));
+const ld=(k,d)=>{try{const x=JSON.parse(localStorage.getItem(k));return x==null?d:x}catch(e){return d}};
+const E=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fm=n=>Math.round(n).toLocaleString('es');
+const num=n=>(+n.toFixed(2)).toLocaleString('es');
+let F=ld('foods2',null);if(!Array.isArray(F)||!F.length)F=cl(F0);
+let P=ld('plan2',null);if(!Array.isArray(P)||P.length!==4)P=cl(DEF);
+let W=+ld('w1',0)||0;
+const PF=ld('pf1',{})||{};
+PF.sex=PF.sex||'m';PF.act=PF.act||1.55;if(PF.goal===undefined)PF.goal=-0.2;
+const food=n=>F.find(x=>x.n===n)||F[0];
+const cats=()=>[...new Set(F.map(x=>x.c))];
+const unit=x=>x.c==='Bebidas'?'ml':'g';
+// Gramos equivalentes en la base de la etiqueta (cocinado o crudo)
+const eq=(x,it)=>{if(!(x.y>0)||it.s===x.b)return it.g;return x.b==='r'?it.g/x.y:it.g*x.y};
+const snap=()=>cl({foods:F,plan:P,pf:PF,w:W});
+let tmr;
+function save(push=true){
+try{localStorage.setItem('foods2',JSON.stringify(F));localStorage.setItem('plan2',JSON.stringify(P));localStorage.setItem('pf1',JSON.stringify(PF));localStorage.setItem('w1',W)}catch(e){}
+if(push){clearTimeout(tmr);tmr=setTimeout(()=>window.cloudSave&&window.cloudSave(snap()),800)}
+}
+function calcGoal(){
+const a=+PF.age,h=+PF.h;
+if(!(a>=14&&a<=99&&W>=30&&W<=300&&h>=120&&h<=230))return null;
+const tdee=(10*W+6.25*h-5*a+(PF.sex==='m'?5:-161))*PF.act,t=Math.round(tdee*(1+PF.goal));
+return{tdee:tdee,t:t,lo:t-100,hi:t+100,wk:Math.round((t-tdee)*7/7.7)};
+}
+const opts=n=>cats().map(c=>'<optgroup label="'+E(c)+'">'+F.filter(x=>x.c===c).map(x=>'<option'+(x.n===n?' selected':'')+'>'+E(x.n)+'</option>').join('')+'</optgroup>').join('');
+const syncSex=()=>document.querySelectorAll('#sex button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===PF.sex));
+function fillForm(){
+document.getElementById('w').value=W>0?W:'';
+document.getElementById('age').value=PF.age||'';document.getElementById('h').value=PF.h||'';
+document.getElementById('act').value=PF.act;document.getElementById('goal').value=PF.goal;syncSex();
+}
+function draw(){
+let h='';
+P.forEach((m,a)=>{
+let r='';
+m.i.forEach((it,b)=>{
+const x=food(it.n),d='data-m="'+a+'" data-i="'+b+'"',id='i'+a+'_'+b+'_';
+if(!it.s)it.s=x.b;
+const cell=(l,j)=>'<div><label for="'+id+j+'">'+l+'</label><input type="number" inputmode="decimal" min="0" step="any" id="'+id+j+'" data-a="c" data-j="'+j+'" '+d+'></div>';
+const seg=x.y>0?'<div class="seg" role="group" aria-label="Cómo pesaste este alimento">'+[['r','Pesado crudo / seco'],['c','Pesado cocinado']].map(s=>'<button data-a="st" data-v="'+s[0]+'" aria-pressed="'+(it.s===s[0])+'" '+d+'>'+s[1]+'</button>').join('')+'</div><p class="mu" id="q'+a+'_'+b+'"></p>':'';
+r+='<div class="r"><select aria-label="Alimento" data-a="s" '+d+'>'+opts(it.n)+'</select><div class="r2"><input type="number" inputmode="numeric" min="0" max="3000" aria-label="Cantidad" value="'+it.g+'" data-a="g" '+d+'><span>'+unit(x)+'</span><b id="k'+a+'_'+b+'"></b><button class="x" data-a="x" aria-label="Quitar" '+d+'>×</button></div>'+seg+
+'<details><summary>Datos de la etiqueta (por 100 '+unit(x)+')</summary><div class="r3">'+cell('kcal','k')+cell('Prot.','p')+cell('Carb.','h')+cell('Grasa','f')+'</div>'+
+'<div class="r4"><div><label for="'+id+'b">La etiqueta es de</label><select id="'+id+'b" data-a="fb" '+d+'><option value="c"'+(x.b==='c'?' selected':'')+'>Cocinado o tal cual</option><option value="r"'+(x.b==='r'?' selected':'')+'>Crudo o seco</option></select></div><div><label for="'+id+'y">Rendimiento (×)</label><input type="number" inputmode="decimal" min="0" step="any" id="'+id+'y" value="'+(x.y||'')+'" placeholder="Sin conversión" data-a="fy" '+d+'></div></div>'+
+'<button class="del" data-a="df" '+d+'>Eliminar este alimento de la base de datos</button></details></div>';
+});
+h+='<section class="card"><div class="hd"><h2>'+m.n+'</h2><b id="mk'+a+'"></b></div><p class="mu" id="mm'+a+'"></p>'+r+'<button class="add" data-a="a" data-m="'+a+'">Añadir alimento</button></section>';
+});
+document.getElementById('m').innerHTML=h;
+document.getElementById('cats').innerHTML=cats().map(c=>'<option value="'+E(c)+'">').join('');
+upd();
+}
+function upd(){
+let T=0,TP=0,TC=0,TF=0;
+P.forEach((m,a)=>{
+let s=0,p=0,c=0,q=0;
+m.i.forEach((it,b)=>{
+const x=food(it.n),e=eq(x,it),k=x.k*e/100;
+s+=k;p+=x.p*e/100;c+=x.h*e/100;q+=x.f*e/100;
+document.getElementById('k'+a+'_'+b).textContent=Math.round(k)+' kcal';
+const qe=document.getElementById('q'+a+'_'+b);
+if(qe)qe.textContent=it.s===x.b?'La etiqueta ya está en '+(x.b==='r'?'crudo':'cocinado')+': sin conversión.':'Equivale a '+num(e)+' '+unit(x)+(x.b==='r'?' en crudo':' cocinado')+' (rendimiento ×'+num(x.y)+').';
+['k','p','h','f'].forEach(j=>{const el=document.getElementById('i'+a+'_'+b+'_'+j);if(el&&document.activeElement!==el)el.value=x[j]});
+});
+T+=s;TP+=p;TC+=c;TF+=q;
+document.getElementById('mk'+a).textContent='~'+fm(s)+' kcal';
+document.getElementById('mm'+a).textContent='Prot. '+fm(p)+' g · Carb. '+fm(c)+' g · Grasa '+fm(q)+' g';
+});
+document.getElementById('t').textContent=fm(T);
+const G=calcGoal(),lo=G?G.lo:1500,hi=G?G.hi:1700,mn=lo-500,mx2=hi+500;
+document.getElementById('cr').innerHTML=G?'<div class="stats"><div><p class="mu">Mantenimiento</p><b>'+fm(G.tdee)+' kcal</b></div><div><p class="mu">Tu objetivo</p><b>'+fm(G.t)+' kcal</b></div></div><p class="mu" style="margin:10px 0 0">'+(G.wk<-25?'Pérdida estimada: '+fm(-G.wk)+' g por semana. ':G.wk>25?'Ganancia estimada: '+fm(G.wk)+' g por semana. ':'Peso estable. ')+'Rango del día: '+fm(lo)+' a '+fm(hi)+' kcal.</p>':'<p class="mu" style="margin:0">Completa edad, peso y altura. Mientras tanto uso 1.500 a 1.700 kcal.</p>';
+document.getElementById('mk').style.left=Math.max(0,Math.min(100,(T-mn)/(mx2-mn)*100))+'%';
+document.getElementById('s1').textContent=fm(mn);document.getElementById('s2').textContent=fm(lo)+' a '+fm(hi);document.getElementById('s3').textContent=fm(mx2);
+const st=document.getElementById('st');
+if(T>=lo&&T<=hi){st.textContent='Dentro del objetivo';st.style.color='#5ACAE4'}
+else if(T>hi){st.textContent='Te pasas '+fm(T-hi)+' kcal del máximo';st.style.color='#f0a35e'}
+else{st.textContent='Te faltan '+fm(lo-T)+' kcal para el mínimo';st.style.color='#f0a35e'}
+const R=[['Proteína',TP,TP*4,'#5ACAE4'],['Carbohidratos',TC,TC*4,'#f2f2f2'],['Grasas',TF,TF*9,'#7a7a7a']];
+const kt=R[0][2]+R[1][2]+R[2][2]||1;
+document.getElementById('mbar').innerHTML=R.map(r=>'<i style="width:'+(r[2]/kt*100)+'%;background:'+r[3]+'"></i>').join('');
+document.getElementById('mrows').innerHTML=R.map(r=>'<div class="mr"><span><span class="dot" style="background:'+r[3]+'"></span>'+r[0]+'</span><span><b>'+fm(r[1])+' g</b> · '+Math.round(r[2]/kt*100)+'% de las calorías</span></div>').join('');
+const mx=R.reduce((x,y)=>y[2]>x[2]?y:x);
+document.getElementById('dom').textContent='Hoy predominan: '+mx[0].toLowerCase();
+document.getElementById('pk').textContent=W>0?(TP/W).toFixed(1).replace('.',',')+' g de proteína por kg (habitual: ~2)':'';
+}
+document.addEventListener('input',e=>{
+const t=e.target,a=t.dataset.a;
+if(a==='g'){P[t.dataset.m].i[t.dataset.i].g=Math.max(0,+t.value||0);upd();save()}
+else if(a==='c'){food(P[t.dataset.m].i[t.dataset.i].n)[t.dataset.j]=Math.max(0,+t.value||0);upd();save()}
+else if(t.id==='age'||t.id==='h'){PF[t.id]=t.value;save();upd()}
+else if(t.id==='w'){W=Math.max(0,+t.value||0);save();upd()}
+});
+document.addEventListener('change',e=>{
+const t=e.target,a=t.dataset.a;
+if(a==='s'){const it=P[t.dataset.m].i[t.dataset.i],x=food(t.value);it.n=x.n;it.g=x.g;it.s=x.b;draw();save()}
+else if(a==='fb'){food(P[t.dataset.m].i[t.dataset.i].n).b=t.value;draw();save()}
+else if(a==='fy'){food(P[t.dataset.m].i[t.dataset.i].n).y=Math.max(0,+t.value||0);draw();save()}
+else if(t.id==='act'||t.id==='goal'){PF[t.id]=parseFloat(t.value);save();upd()}
+});
+document.addEventListener('click',e=>{
+const b=e.target.closest('button');
+if(!b)return;
+const a=b.dataset.a,m=+b.dataset.m,i=+b.dataset.i;
+if(a==='x')P[m].i.splice(i,1);
+else if(a==='a')P[m].i.push({n:F[0].n,g:F[0].g,s:F[0].b});
+else if(a==='st')P[m].i[i].s=b.dataset.v;
+else if(a==='r'){if(!confirm('¿Restablecer las comidas del día? Tus alimentos guardados no se borran.'))return;P=cl(DEF)}
+else if(a==='sx'){PF.sex=b.dataset.v;save();syncSex();upd();return}
+else if(a==='df'){
+const n=P[m].i[i].n;
+if(F.length<2)return;
+if(P.some(z=>z.i.some(y=>y.n===n))&&!confirm('"'+n+'" está en tus comidas de hoy. Si lo eliminas, se sustituirá por otro alimento. ¿Continuar?'))return;
+if(!confirm('¿Eliminar "'+n+'" de la base de datos?'))return;
+F=F.filter(x=>x.n!==n);
+P.forEach(z=>z.i.forEach(y=>{if(!F.some(x=>x.n===y.n)){y.n=F[0].n;y.s=F[0].b}}));
+}
+else if(a==='nf'){
+const g=id=>document.getElementById(id),c=g('nc').value.trim(),n=g('nn').value.trim();
+if(!c||!n){alert('Escribe el grupo y el nombre del alimento.');return}
+if(F.some(x=>x.n.toLowerCase()===n.toLowerCase())){alert('Ya existe un alimento con ese nombre.');return}
+F.push({c:c,n:n,k:Math.max(0,+g('nk').value||0),p:Math.max(0,+g('np').value||0),h:Math.max(0,+g('nh').value||0),f:Math.max(0,+g('nf').value||0),g:100,b:g('nb').value,y:Math.max(0,+g('ny').value||0)});
+['nc','nn','nk','np','nh','nf','ny'].forEach(id=>g(id).value='');
+}
+else if(a==='li'){window.cloudLogin&&window.cloudLogin();return}
+else if(a==='lo'){window.cloudLogout&&window.cloudLogout();return}
+else return;
+draw();save();
+});
+// Datos que llegan de Firebase al iniciar sesión
+window.snap=snap;
+window.applyCloud=d=>{
+if(Array.isArray(d.foods)&&d.foods.length)F=d.foods;
+if(Array.isArray(d.plan)&&d.plan.length===4)P=d.plan;
+if(d.pf)Object.assign(PF,d.pf);
+W=+d.w||0;
+save(false);fillForm();draw();
+};
+fillForm();draw();
+</script>
+<script type="module">
+// 1) Crea un proyecto en Firebase, activa Authentication (Google) y Firestore.
+// 2) En "Configuración del proyecto > Tus apps > Web" copia tu firebaseConfig y pégalo aquí.
+const CFG=null;
+/* Ejemplo:
+const CFG={apiKey:"...",authDomain:"TU-PROYECTO.firebaseapp.com",projectId:"TU-PROYECTO",appId:"..."};
+*/
+const st=document.getElementById('cl'),lb=document.getElementById('lb');
+if(!CFG){
+  st.textContent='Modo local: los datos se guardan solo en este dispositivo.';
+  lb.hidden=true;
+}else{
+  try{
+    const V='10.12.5',B='https://www.gstatic.com/firebasejs/'+V+'/';
+    const [{initializeApp},{getAuth,onAuthStateChanged,signInWithPopup,GoogleAuthProvider,signOut},{getFirestore,doc,getDoc,setDoc}]=await Promise.all([import(B+'firebase-app.js'),import(B+'firebase-auth.js'),import(B+'firebase-firestore.js')]);
+    const app=initializeApp(CFG),auth=getAuth(app),db=getFirestore(app);
+    let ref=null;
+    window.cloudLogin=()=>signInWithPopup(auth,new GoogleAuthProvider()).catch(e=>alert('No se pudo iniciar sesión ('+e.code+').'));
+    window.cloudLogout=()=>signOut(auth);
+    window.cloudSave=d=>{if(ref)setDoc(ref,Object.assign({},d,{updated:Date.now()})).then(()=>{st.textContent='Sincronizado con tu cuenta.'}).catch(e=>{st.textContent='Error al guardar en Firebase ('+e.code+').'})};
+    onAuthStateChanged(auth,async u=>{
+      if(!u){ref=null;st.textContent='Sin sesión: los datos se guardan solo en este dispositivo.';lb.textContent='Iniciar sesión con Google';lb.dataset.a='li';return}
+      ref=doc(db,'usuarios',u.uid,'datos','app');
+      lb.textContent='Cerrar sesión';lb.dataset.a='lo';
+      try{
+        const s=await getDoc(ref);
+        if(s.exists())window.applyCloud(s.data());else window.cloudSave(window.snap());
+        st.textContent='Sincronizado como '+(u.email||u.uid)+'.';
+      }catch(e){st.textContent='Error al leer Firebase ('+e.code+'). Revisa las reglas de Firestore.'}
+    });
+    st.textContent='Sin sesión: los datos se guardan solo en este dispositivo.';
+  }catch(e){st.textContent='No se pudo cargar Firebase. Funciona en modo local.';lb.hidden=true}
+}
+</script>
+</body>
+</html>
